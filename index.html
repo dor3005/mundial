@@ -286,7 +286,7 @@ function loadData(){
 
       document.getElementById("yesterday").innerHTML = renderYesterday(data.yesterdayMatches);
       document.getElementById("today").innerHTML = renderToday(data.todayMatches);
-      document.getElementById("upcoming").innerHTML = renderUpcoming(allUpcoming, data.myTeam);
+     document.getElementById("upcoming").innerHTML = renderUpcoming(allUpcoming, data.myTeam, data.yesterdayMatches);
     })
     .catch(function(e){
       var errMsg = '<div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: ' + e.message + '</div>';
