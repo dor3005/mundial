@@ -153,7 +153,9 @@ function renderYesterday(matches){
     if(mine&&m.myPlayers&&m.myPlayers.length>0){
       h += '<div class="my-ps">';
       m.myPlayers.forEach(function(p){
-        h += '<div class="my-p"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+'</div></div></div>';
+        var pts = p.fantasyPoints !== undefined ? p.fantasyPoints : '—';
+        var ptsColor = pts > 5 ? '#00c896' : pts < 0 ? '#e74c3c' : 'var(--text)';
+        h += '<div class="my-p" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+(p.breakdown ? ' · '+p.breakdown : '')+'</div></div></div><div style="font-size:16px;font-weight:700;color:'+ptsColor+'">'+pts+'<span style="font-size:9px;color:var(--text2)"> pts</span></div></div>';
       });
       h += '</div>';
     }
@@ -178,7 +180,9 @@ function renderToday(matches){
     if(m.myPlayers&&m.myPlayers.length>0){
       h += '<div class="my-ps">';
       m.myPlayers.forEach(function(p){
-        h += '<div class="my-p"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+'</div></div></div>';
+        var pts = p.fantasyPoints !== undefined ? p.fantasyPoints : '—';
+        var ptsColor = pts > 5 ? '#00c896' : pts < 0 ? '#e74c3c' : 'var(--text)';
+        h += '<div class="my-p" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+(p.breakdown ? ' · '+p.breakdown : '')+'</div></div></div><div style="font-size:16px;font-weight:700;color:'+ptsColor+'">'+pts+'<span style="font-size:9px;color:var(--text2)"> pts</span></div></div>';
       });
       h += '</div>';
     }
@@ -187,9 +191,37 @@ function renderToday(matches){
   return h;
 }
 
-function renderUpcoming(matches, myTeam){
-  var h = '<div class="sec">Your Players — Next Matches</div>';
+function getTotalPoints(myTeam, yesterdayMatches) {
+  var totals = {};
+  if (!myTeam) return totals;
+  myTeam.forEach(function(p) { totals[p.name] = { points: 0, played: 0 }; });
+  if (!yesterdayMatches) return totals;
+  yesterdayMatches.forEach(function(m) {
+    if (!m.myPlayers) return;
+    m.myPlayers.forEach(function(p) {
+      if (p.fantasyPoints !== undefined) {
+        if (!totals[p.name]) totals[p.name] = { points: 0, played: 0 };
+        totals[p.name].points += p.fantasyPoints;
+        totals[p.name].played += 1;
+      }
+    });
+  });
+  return totals;
+}
+
+function renderUpcoming(matches, myTeam, yesterdayMatches){
+  var totalPts = 0;
+  if(yesterdayMatches) {
+    yesterdayMatches.forEach(function(m) {
+      if(m.myPlayers) m.myPlayers.forEach(function(p) {
+        if(p.fantasyPoints !== undefined) totalPts += p.fantasyPoints;
+      });
+    });
+  }
+  var h = '<div style="background:linear-gradient(135deg,#1e3a5f,#0a2040);border:1px solid var(--accent);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;color:var(--text2)">Total Fantasy Points</div><div style="font-size:10px;color:var(--text2);margin-top:3px">Tournament so far</div></div><div style="font-size:36px;font-weight:800;color:#00c896">'+totalPts+'</div></div>';
+  h += '<div class="sec">Your Players — Next Matches</div>';
   if(!myTeam) return h;
+  var totals = getTotalPoints(myTeam, yesterdayMatches);
 
   myTeam.forEach(function(player){
     var nextMatch = null;
@@ -203,6 +235,8 @@ function renderUpcoming(matches, myTeam){
       }
     }
     var tonight = nextMatch && isTonight(nextMatch.utcDate);
+    var playerTotal = totals[player.name] || { points: 0, played: 0 };
+    var ptsColor = playerTotal.points > 5 ? '#00c896' : playerTotal.points < 0 ? '#e74c3c' : 'var(--text2)';
     h += '<div class="pc'+(tonight?" tonight":" pending")+'">';
     h += '<div class="av '+posClass(player.pos)+'">'+initials(player.name)+'</div>';
     h += '<div class="pc-info">';
@@ -215,7 +249,9 @@ function renderUpcoming(matches, myTeam){
     } else {
       h += '<div class="pc-next" style="color:var(--text2)">No upcoming match found</div>';
     }
-    h += '</div></div>';
+    h += '</div>';
+    h += '<div style="text-align:center;min-width:44px"><div style="font-size:20px;font-weight:800;color:'+ptsColor+'">'+playerTotal.points+'</div><div style="font-size:9px;color:var(--text2)">pts</div></div>';
+    h += '</div>';
   });
   return h;
 }
