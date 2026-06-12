@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<!-- saved from url=(0067)file:///C:/Users/%D7%93%D7%95%D7%A8/Downloads/mundial_app_cors.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -77,19 +78,19 @@
         <div class="header-title">Fantasy World Cup 2026</div>
         <div class="header-sub">Mondi Bar-On</div>
       </div>
-      <div class="updated" id="updated-chip">Updated ?</div>
+      <div class="updated" id="updated-chip">Loading...</div>
     </div>
     <div class="tabs">
-      <button class="tab on" onclick="show(&#39;yesterday&#39;)">Yesterday</button>
-      <button class="tab" onclick="show(&#39;today&#39;)">Tonight</button>
-      <button class="tab" onclick="show(&#39;upcoming&#39;)">My Players</button>
+      <button class="tab on" onclick="show('yesterday')">Yesterday</button>
+      <button class="tab" onclick="show('today')">Tonight</button>
+      <button class="tab" onclick="show('upcoming')">My Players</button>
     </div>
   </div>
 
   <div class="content">
-    <div id="yesterday" style="display: block;"><div style="color:var(--text2);font-size:13px;padding:20px 0">No matches yesterday</div></div>
-    <div id="today" style="display: none;"><div style="color:var(--text2);font-size:13px;padding:20px 0">No matches with your players tonight</div></div>
-    <div id="upcoming" style="display: none;"><div class="sec">Your Players — Next Matches</div></div>
+    <div id="yesterday"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
+    <div id="today" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
+    <div id="upcoming" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
   </div>
 </div>
 
@@ -98,7 +99,7 @@
 // IMPORTANT: Paste your Google Drive JSON file ID below
 // after setting up the Apps Script and sharing the file
 // ============================================================
-var DRIVE_FILE_ID = "127m5lNGt-5olzlx_ef8rm9cd_XZ5pOzM"; // <- paste file ID here e.g. "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQlzKxB3L8JwoeHTzn97cvBF4PSDv7wY-86P5-rW6SrA-A1Cobtr65pH9quHCE9eTE/exec"; // <- paste file ID here e.g. "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
 
 var FLAGS = {
   MEX:"🇲🇽",RSA:"🇿🇦",KOR:"🇰🇷",CZE:"🇨🇿",CAN:"🇨🇦",BIH:"🇧🇦",USA:"🇺🇸",PAR:"🇵🇾",
@@ -228,7 +229,7 @@ function isTonight(utcDate){
 }
 
 function loadData(){
-  if(!DRIVE_FILE_ID){
+  if(!SCRIPT_URL){
     var setupMsg = '<div class="setup-box"><strong>Setup needed:</strong><br>1. Run the Apps Script (setupDailyTrigger)<br>2. Find "mundial_data.json" in Google Drive<br>3. Share it as "Anyone with link can view"<br>4. Copy the file ID from the URL<br>5. Paste it in this HTML file (DRIVE_FILE_ID variable)</div>';
     document.getElementById("yesterday").innerHTML = setupMsg;
     document.getElementById("today").innerHTML = setupMsg;
@@ -237,7 +238,7 @@ function loadData(){
     return;
   }
 
-  var url = "https://corsproxy.io/?" + encodeURIComponent("https://drive.google.com/uc?export=download&id=" + DRIVE_FILE_ID);
+  var url = SCRIPT_URL;
 
   fetch(url)
     .then(function(r){ return r.json(); })
@@ -262,6 +263,5 @@ function loadData(){
 
 loadData();
 </script>
-
-
-</body></html>
+</body>
+</html>
