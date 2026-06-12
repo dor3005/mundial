@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)file:///C:/Users/%D7%93%D7%95%D7%A8/Downloads/mundial_app_final_3.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fantasy WC">
+<title>Fantasy World Cup 2026</title>
+<style>
+  :root {
+    --bg:#0f1923; --bg2:#1a2636; --bg3:#243447;
+    --accent:#1e90ff; --green:#00c896; --gold:#f5c842;
+    --red:#e74c3c; --text:#f0f4f8; --text2:#8da3b8;
+    --border:rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',Arial,sans-serif;font-size:14px}
+  .app{max-width:480px;margin:0 auto;padding-bottom:20px}
+  .header{background:var(--bg2);padding:14px 14px 10px;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border)}
+  .header-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .logo{font-size:26px}
+  .header-title{font-size:16px;font-weight:700}
+  .header-sub{font-size:11px;color:var(--text2);margin-top:1px}
+  .updated{margin-right:auto;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:10px;color:var(--text2)}
+  .tabs{display:flex;gap:3px;background:var(--bg3);border-radius:10px;padding:3px}
+  .tab{flex:1;padding:7px 2px;text-align:center;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:var(--text2);border:none;background:transparent;transition:all .2s}
+  .tab.on{background:var(--accent);color:white}
+  .content{padding:12px}
+  .sec{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+  .mc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px 13px;margin-bottom:10px}
+  .mc.mine{border-color:var(--accent);border-width:1.5px;background:rgba(30,144,255,.08)}
+  .mc.today-mine{border-color:var(--green);border-width:1.5px;background:rgba(0,200,150,.08)}
+  .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;margin-bottom:8px}
+  .badge-blue{background:var(--accent);color:white}
+  .badge-green{background:var(--green);color:white}
+  .teams{display:flex;align-items:center;gap:6px}
+  .tm{flex:1;text-align:center}
+  .tm-nat{font-size:11px;font-weight:700;color:var(--text2)}
+  .tm-name{font-size:13px;font-weight:700;color:var(--text);margin-top:2px}
+  .sc{text-align:center;min-width:60px}
+  .sc-num{font-size:26px;font-weight:900;color:var(--text);line-height:1}
+  .sc-lbl{font-size:10px;color:var(--text2);margin-top:2px}
+  .sc-time{font-size:19px;font-weight:700;color:var(--green);line-height:1}
+  .sc-il{font-size:10px;color:var(--gold);font-weight:600;margin-top:2px}
+  .events{border-top:1px solid var(--border);margin-top:9px;padding-top:7px}
+  .ev{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);margin-bottom:4px}
+  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .dot-g{background:var(--green)} .dot-a{background:var(--accent)} .dot-r{background:var(--red)} .dot-y{background:var(--gold)}
+  .my-ps{border-top:1px solid var(--border);margin-top:8px;padding-top:7px}
+  .my-p{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+  .gk{background:#f0c040;color:#5a3c00} .def{background:#27ae60;color:#0a3d1f} .mid{background:#2980b9;color:#0a2a40} .fwd{background:#e74c3c;color:#4a0d09}
+  .p-name{font-size:12px;font-weight:600;color:var(--text)}
+  .p-pos{font-size:10px;color:var(--text2);margin-top:1px}
+  .pc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+  .pc.pending{opacity:.5}
+  .pc.tonight{border-color:var(--gold)}
+  .pc-info{flex:1;min-width:0}
+  .pc-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pc-detail{font-size:10px;color:var(--text2);margin-top:2px}
+  .pc-next{font-size:10px;color:var(--accent);margin-top:2px}
+  .spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
+  .error-box{background:rgba(231,76,60,.1);border:1px solid var(--red);border-radius:12px;padding:14px;color:var(--red);font-size:12px;line-height:1.6}
+  .setup-box{background:rgba(245,200,66,.08);border:1px solid var(--gold);border-radius:12px;padding:14px;font-size:12px;color:var(--text2);line-height:1.8}
+  .setup-box strong{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">⚽</div>
+      <div>
+        <div class="header-title">Fantasy World Cup 2026</div>
+        <div class="header-sub">Mondi Bar-On</div>
+      </div>
+      <div class="updated" id="updated-chip">Error</div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="show(&#39;yesterday&#39;)">Yesterday</button>
+      <button class="tab" onclick="show(&#39;today&#39;)">Tonight</button>
+      <button class="tab" onclick="show(&#39;upcoming&#39;)">My Players</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div id="yesterday"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
+    <div id="today" style="display:none"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
+    <div id="upcoming" style="display:none"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// IMPORTANT: Paste your Google Drive JSON file ID below
+// after setting up the Apps Script and sharing the file
+// ============================================================
+var DRIVE_FILE_ID = "127m5lNGt-5olzlx_ef8rm9cd_XZ5pOzM"; // <- paste file ID here e.g. "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+
+var FLAGS = {
+  MEX:"🇲🇽",RSA:"🇿🇦",KOR:"🇰🇷",CZE:"🇨🇿",CAN:"🇨🇦",BIH:"🇧🇦",USA:"🇺🇸",PAR:"🇵🇾",
+  NED:"🇳🇱",JPN:"🇯🇵",GER:"🇩🇪",BEL:"🇧🇪",EGY:"🇪🇬",URU:"🇺🇾",CPV:"🇨🇻",ARG:"🇦🇷",
+  ALG:"🇩🇿",FRA:"🇫🇷",SEN:"🇸🇳",ENG:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",CRO:"🇭🇷",POR:"🇵🇹",COD:"🇨🇩",MAR:"🇲🇦",
+  BRA:"🇧🇷",ESP:"🇪🇸",SAU:"🇸🇦",IRN:"🇮🇷",NZL:"🇳🇿",AUS:"🇦🇺",TUR:"🇹🇷",SUI:"🇨🇭",
+  QAT:"🇶🇦",GHA:"🇬🇭",PAN:"🇵🇦",COL:"🇨🇴",UZB:"🇺🇿",SCO:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",HAI:"🇭🇹",NOR:"🇳🇴",
+  IRQ:"🇮🇶",AUT:"🇦🇹",JOR:"🇯🇴",SWE:"🇸🇪",TUN:"🇹🇳",CUW:"🇨🇼",IVC:"🇨🇮",ECU:"🇪🇨",CPE:"🇨🇻"
+};
+
+function flag(nat){ return FLAGS[nat] || "🏳️"; }
+
+function posClass(pos){ return {GK:"gk",DEF:"def",MID:"mid",FWD:"fwd"}[pos]||"mid"; }
+
+function initials(name){ return name.split(" ").map(function(w){return w[0]}).join("").slice(0,2).toUpperCase(); }
+
+function formatTimeIL(utcDate){
+  try{
+    var d = new Date(utcDate);
+    return d.toLocaleTimeString("en-IL",{timeZone:"Asia/Jerusalem",hour:"2-digit",minute:"2-digit",hour12:false});
+  }catch(e){ return "?:??"; }
+}
+
+function show(tab){
+  ["yesterday","today","upcoming"].forEach(function(id){
+    document.getElementById(id).style.display = id===tab?"block":"none";
+  });
+  document.querySelectorAll(".tab").forEach(function(t,i){
+    t.classList.toggle("on",["yesterday","today","upcoming"][i]===tab);
+  });
+}
+
+function renderYesterday(matches){
+  if(!matches||matches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">No matches yesterday</div>';
+  var h = '<div class="sec">Yesterday\'s Results</div>';
+  matches.forEach(function(m){
+    var mine = m.hasMine;
+    h += '<div class="mc'+(mine?" mine":"")+'">';
+    if(mine) h += '<div class="badge badge-blue">YOUR PLAYERS HERE</div>';
+    h += '<div class="teams">';
+    h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
+    h += '<div class="sc"><div class="sc-num">'+(m.homeScore!==null?m.homeScore+' – '+m.awayScore:'–')+'</div><div class="sc-lbl">Full Time</div></div>';
+    h += '<div class="tm"><div style="font-size:22px">'+flag(m.awayNat)+'</div><div class="tm-nat">'+m.awayNat+'</div><div class="tm-name">'+m.away+'</div></div>';
+    h += '</div>';
+    if(m.goals&&m.goals.length>0){
+      h += '<div class="events">';
+      m.goals.forEach(function(g){ h += '<div class="ev"><span class="dot dot-g"></span>'+g+'</div>'; });
+      if(m.cards) m.cards.forEach(function(c){ h += '<div class="ev"><span class="dot dot-r"></span>'+c+'</div>'; });
+      h += '</div>';
+    }
+    if(mine&&m.myPlayers&&m.myPlayers.length>0){
+      h += '<div class="my-ps">';
+      m.myPlayers.forEach(function(p){
+        h += '<div class="my-p"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+'</div></div></div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  return h;
+}
+
+function renderToday(matches){
+  if(!matches||matches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">No matches with your players tonight</div>';
+  var myMatches = matches.filter(function(m){ return m.hasMine; });
+  if(myMatches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">None of your players are playing tonight</div>';
+  var h = '<div class="sec">Tonight\'s Matches — Your Players</div>';
+  myMatches.forEach(function(m){
+    h += '<div class="mc today-mine">';
+    h += '<div class="badge badge-green">YOUR PLAYER IS PLAYING</div>';
+    h += '<div class="teams">';
+    h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
+    h += '<div class="sc"><div class="sc-time">'+formatTimeIL(m.utcDate)+'</div><div class="sc-il">Israel Time</div></div>';
+    h += '<div class="tm"><div style="font-size:22px">'+flag(m.awayNat)+'</div><div class="tm-nat">'+m.awayNat+'</div><div class="tm-name">'+m.away+'</div></div>';
+    h += '</div>';
+    if(m.myPlayers&&m.myPlayers.length>0){
+      h += '<div class="my-ps">';
+      m.myPlayers.forEach(function(p){
+        h += '<div class="my-p"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+'</div></div></div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  return h;
+}
+
+function renderUpcoming(matches, myTeam){
+  var h = '<div class="sec">Your Players — Next Matches</div>';
+  if(!myTeam) return h;
+
+  myTeam.forEach(function(player){
+    var nextMatch = null;
+    if(matches){
+      for(var i=0;i<matches.length;i++){
+        var m = matches[i];
+        if(m.homeNat===player.nat||m.awayNat===player.nat){
+          nextMatch = m;
+          break;
+        }
+      }
+    }
+    var tonight = nextMatch && isTonight(nextMatch.utcDate);
+    h += '<div class="pc'+(tonight?" tonight":" pending")+'">';
+    h += '<div class="av '+posClass(player.pos)+'">'+initials(player.name)+'</div>';
+    h += '<div class="pc-info">';
+    h += '<div class="pc-name">'+player.name+'</div>';
+    h += '<div class="pc-detail">'+player.pos+' &bull; '+flag(player.nat)+' '+player.nat+'</div>';
+    if(nextMatch){
+      var opp = nextMatch.homeNat===player.nat ? nextMatch.away : nextMatch.home;
+      var oppNat = nextMatch.homeNat===player.nat ? nextMatch.awayNat : nextMatch.homeNat;
+      h += '<div class="pc-next">'+(tonight?"TONIGHT":"Next: ")+' '+formatTimeIL(nextMatch.utcDate)+' vs '+flag(oppNat)+' '+opp+'</div>';
+    } else {
+      h += '<div class="pc-next" style="color:var(--text2)">No upcoming match found</div>';
+    }
+    h += '</div></div>';
+  });
+  return h;
+}
+
+function isTonight(utcDate){
+  try{
+    var matchDate = new Date(utcDate).toLocaleDateString("en-IL",{timeZone:"Asia/Jerusalem"});
+    var todayDate = new Date().toLocaleDateString("en-IL",{timeZone:"Asia/Jerusalem"});
+    return matchDate === todayDate;
+  }catch(e){ return false; }
+}
+
+function loadData(){
+  if(!DRIVE_FILE_ID){
+    var setupMsg = '<div class="setup-box"><strong>Setup needed:</strong><br>1. Run the Apps Script (setupDailyTrigger)<br>2. Find "mundial_data.json" in Google Drive<br>3. Share it as "Anyone with link can view"<br>4. Copy the file ID from the URL<br>5. Paste it in this HTML file (DRIVE_FILE_ID variable)</div>';
+    document.getElementById("yesterday").innerHTML = setupMsg;
+    document.getElementById("today").innerHTML = setupMsg;
+    document.getElementById("upcoming").innerHTML = setupMsg;
+    document.getElementById("updated-chip").textContent = "Setup needed";
+    return;
+  }
+
+  var url = "https://drive.google.com/uc?export=download&id=" + DRIVE_FILE_ID;
+
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var updated = data.updatedAt ? new Date(data.updatedAt).toLocaleTimeString("en-IL",{timeZone:"Asia/Jerusalem",hour:"2-digit",minute:"2-digit"}) : "?";
+      document.getElementById("updated-chip").textContent = "Updated " + updated;
+
+      var allUpcoming = (data.todayMatches||[]).concat(data.upcomingMatches||[]);
+
+      document.getElementById("yesterday").innerHTML = renderYesterday(data.yesterdayMatches);
+      document.getElementById("today").innerHTML = renderToday(data.todayMatches);
+      document.getElementById("upcoming").innerHTML = renderUpcoming(allUpcoming, data.myTeam);
+    })
+    .catch(function(e){
+      var errMsg = '<div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: ' + e.message + '</div>';
+      document.getElementById("yesterday").innerHTML = errMsg;
+      document.getElementById("today").innerHTML = errMsg;
+      document.getElementById("upcoming").innerHTML = errMsg;
+      document.getElementById("updated-chip").textContent = "Error";
+    });
+}
+
+loadData();
+</script>
+
+
+</body></html>
