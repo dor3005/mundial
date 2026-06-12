@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0070)file:///C:/Users/%D7%93%D7%95%D7%A8/Downloads/mundial_app_final_3.html -->
+<!-- saved from url=(0067)file:///C:/Users/%D7%93%D7%95%D7%A8/Downloads/mundial_app_cors.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -77,7 +77,7 @@
         <div class="header-title">Fantasy World Cup 2026</div>
         <div class="header-sub">Mondi Bar-On</div>
       </div>
-      <div class="updated" id="updated-chip">Error</div>
+      <div class="updated" id="updated-chip">Updated ?</div>
     </div>
     <div class="tabs">
       <button class="tab on" onclick="show(&#39;yesterday&#39;)">Yesterday</button>
@@ -87,9 +87,9 @@
   </div>
 
   <div class="content">
-    <div id="yesterday"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
-    <div id="today" style="display:none"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
-    <div id="upcoming" style="display:none"><div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: Failed to fetch</div></div>
+    <div id="yesterday" style="display: block;"><div style="color:var(--text2);font-size:13px;padding:20px 0">No matches yesterday</div></div>
+    <div id="today" style="display: none;"><div style="color:var(--text2);font-size:13px;padding:20px 0">No matches with your players tonight</div></div>
+    <div id="upcoming" style="display: none;"><div class="sec">Your Players — Next Matches</div></div>
   </div>
 </div>
 
@@ -237,7 +237,7 @@ function loadData(){
     return;
   }
 
-  var url = "https://drive.google.com/uc?export=download&id=" + DRIVE_FILE_ID;
+  var url = "https://corsproxy.io/?" + encodeURIComponent("https://drive.google.com/uc?export=download&id=" + DRIVE_FILE_ID);
 
   fetch(url)
     .then(function(r){ return r.json(); })
