@@ -167,6 +167,7 @@ function renderYesterday(matches){
 function renderToday(matches){
   if(!matches||matches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">No matches with your players tonight</div>';
   var myMatches = matches.filter(function(m){ return m.hasMine; });
+  myMatches.sort(function(a, b){ return new Date(a.utcDate) - new Date(b.utcDate); });
   if(myMatches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">None of your players are playing tonight</div>';
   var h = '<div class="sec">Tonight\'s Matches — Your Players</div>';
   myMatches.forEach(function(m){
