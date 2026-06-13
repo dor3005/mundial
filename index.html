@@ -175,7 +175,9 @@ function renderToday(matches){
     h += '<div class="badge badge-green">YOUR PLAYER IS PLAYING</div>';
     h += '<div class="teams">';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
-    h += '<div class="sc"><div class="sc-time">'+formatTimeIL(m.utcDate)+'</div><div class="sc-il">Israel Time</div></div>';
+   var scoreOrTime = m.isLive ? (m.homeScore+' - '+m.awayScore) : m.homeScore !== null ? (m.homeScore+' - '+m.awayScore) : formatTimeIL(m.utcDate);
+var clockLabel = m.isLive ? '🔴 '+m.clock : m.homeScore !== null ? 'Full Time' : 'Israel Time';
+h += '<div class="sc"><div class="sc-time">'+scoreOrTime+'</div><div class="sc-il">'+clockLabel+'</div></div>';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.awayNat)+'</div><div class="tm-nat">'+m.awayNat+'</div><div class="tm-name">'+m.away+'</div></div>';
     h += '</div>';
     if(m.myPlayers&&m.myPlayers.length>0){
