@@ -181,9 +181,10 @@ function renderToday(matches){
     if(m.myPlayers&&m.myPlayers.length>0){
       h += '<div class="my-ps">';
       m.myPlayers.forEach(function(p){
+        var lineupIcon = p.lineup === "starting" ? " ✅ Starting" : p.lineup === "bench" ? " 🔶 Bench" : "";
         var pts = p.fantasyPoints !== undefined ? p.fantasyPoints : '—';
         var ptsColor = pts > 5 ? '#00c896' : pts < 0 ? '#e74c3c' : 'var(--text)';
-        h += '<div class="my-p" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+(p.breakdown ? ' · '+p.breakdown : '')+'</div></div></div><div style="font-size:16px;font-weight:700;color:'+ptsColor+'">'+pts+'<span style="font-size:9px;color:var(--text2)"> pts</span></div></div>';
+        h += '<div class="my-p" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos"'+p.pos+lineupIcon+(p.breakdown ? ' · '+p.breakdown : '')+'</div></div></div><div style="font-size:16px;font-weight:700;color:'+ptsColor+'">'+pts+'<span style="font-size:9px;color:var(--text2)"> pts</span></div></div>';
       });
       h += '</div>';
     }
