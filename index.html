@@ -246,7 +246,8 @@ function renderUpcoming(matches, myTeam, yesterdayMatches){
     if(nextMatch){
       var opp = nextMatch.homeNat===player.nat ? nextMatch.away : nextMatch.home;
       var oppNat = nextMatch.homeNat===player.nat ? nextMatch.awayNat : nextMatch.homeNat;
-      h += '<div class="pc-next">'+(tonight?"TONIGHT":"Next: ")+' '+formatTimeIL(nextMatch.utcDate)+' vs '+flag(oppNat)+' '+opp+'</div>';
+      var matchDate = new Date(nextMatch.utcDate).toLocaleDateString("en-IL",{timeZone:"Asia/Jerusalem",day:"2-digit",month:"2-digit"});
+h += '<div class="pc-next">'+(tonight?"TONIGHT ⚡":"Next: ")+' '+matchDate+' '+formatTimeIL(nextMatch.utcDate)+' vs '+flag(oppNat)+' '+opp+'</div>';
     } else {
       h += '<div class="pc-next" style="color:var(--text2)">No upcoming match found</div>';
     }
