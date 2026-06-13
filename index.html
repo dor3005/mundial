@@ -165,26 +165,29 @@ function renderYesterday(matches){
 }
 
 function renderToday(matches){
-  if(!matches||matches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">No matches with your players tonight</div>';
-  var myMatches = matches.filter(function(m){ return m.hasMine; });
-  myMatches.sort(function(a, b){ return new Date(a.utcDate) - new Date(b.utcDate); });
-  if(myMatches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">None of your players are playing tonight</div>';
-  var h = '<div class="sec">Tonight\'s Matches \u2014 Your Players</div>';
-  myMatches.forEach(function(m){
+  if(!matches||matches.length===0) return '<div style="color:var(--text2);font-size:13px;padding:20px 0">No matches tonight</div>';
+  
+  var sorted = matches.slice().sort(function(a,b){ return new Date(a.utcDate)-new Date(b.utcDate); });
+  
+  var h = '<div class="sec">Tonight\'s Matches</div>';
+  sorted.forEach(function(m){
     var scoreOrTime = (m.isLive || m.homeScore !== null) ? m.homeScore+' - '+m.awayScore : formatTimeIL(m.utcDate);
     var clockLabel = m.isLive ? '[LIVE] '+m.clock : m.homeScore !== null ? 'Full Time' : 'Israel Time';
-    h += '<div class="mc today-mine">';
-    h += '<div class="badge badge-green">YOUR PLAYER IS PLAYING</div>';
+    var isMine = m.hasMine;
+    
+    h += '<div class="mc'+(isMine?' today-mine':'')+'">';
+    if(isMine) h += '<div class="badge badge-green">YOUR PLAYER IS PLAYING</div>';
     h += '<div class="teams">';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
     h += '<div class="sc"><div class="sc-time">'+scoreOrTime+'</div><div class="sc-il">'+clockLabel+'</div></div>';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.awayNat)+'</div><div class="tm-nat">'+m.awayNat+'</div><div class="tm-name">'+m.away+'</div></div>';
     h += '</div>';
-    if(m.myPlayers&&m.myPlayers.length>0){
+    
+    if(isMine && m.myPlayers && m.myPlayers.length>0){
       h += '<div class="my-ps">';
       m.myPlayers.forEach(function(p){
-        var lineupIcon = p.lineup === "starting" ? " \u2705 Starting" : p.lineup === "bench" ? " \u{1F536} Bench" : "";
-        var pts = p.fantasyPoints !== undefined ? p.fantasyPoints : '\u2014';
+        var lineupIcon = p.lineup==="starting" ? " ✅ Starting" : p.lineup==="bench" ? " 🔶 Bench" : "";
+        var pts = p.fantasyPoints !== undefined ? p.fantasyPoints : '—';
         var ptsColor = pts > 5 ? '#00c896' : pts < 0 ? '#e74c3c' : 'var(--text)';
         h += '<div class="my-p" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div class="av '+posClass(p.pos)+'">'+initials(p.name)+'</div><div><div class="p-name">'+p.name+'</div><div class="p-pos">'+p.pos+lineupIcon+'</div></div></div><div style="font-size:16px;font-weight:700;color:'+ptsColor+'">'+pts+'<span style="font-size:9px;color:var(--text2)"> pts</span></div></div>';
       });
