@@ -202,10 +202,13 @@ function getTotalPoints(myTeam, yesterdayMatches, todayMatches) {
   var totals = {};
   if (!myTeam) return totals;
   myTeam.forEach(function(p) { totals[p.name] = { points: 0, played: 0 }; });
-  if (!yesterdayMatches) return totals;
- var allMatches = (yesterdayMatches || []).concat(todayMatches || []);
-allMatches.forEach(function(m) {
+  
+  var seenMatchIds = {};
+  var allMatches = (yesterdayMatches || []).concat(todayMatches || []);
+  allMatches.forEach(function(m) {
     if (!m.myPlayers) return;
+    if (seenMatchIds[m.matchId]) return;
+    seenMatchIds[m.matchId] = true;
     m.myPlayers.forEach(function(p) {
       if (p.fantasyPoints !== undefined) {
         if (!totals[p.name]) totals[p.name] = { points: 0, played: 0 };
@@ -216,11 +219,13 @@ allMatches.forEach(function(m) {
   });
   return totals;
 }
-
 function renderUpcoming(matches, myTeam, yesterdayMatches, todayMatches){
   var totalPts = 0;
- var allPtsMatches = (yesterdayMatches || []).concat(todayMatches || []);
+ var seenIds = {};
+var allPtsMatches = (yesterdayMatches || []).concat(todayMatches || []);
 allPtsMatches.forEach(function(m) {
+  if(seenIds[m.matchId]) return;
+  seenIds[m.matchId] = true;
   if(m.myPlayers) m.myPlayers.forEach(function(p) {
     if(p.fantasyPoints !== undefined) totalPts += p.fantasyPoints;
   });
