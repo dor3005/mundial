@@ -100,7 +100,7 @@
   <div class="content">
     <div id="yesterday"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
     <div id="today" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
-    <div id="schedule" style="display:none"><div class="loading"><div class="spin"></div><br>Loading...</div></div><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
+    <div id="schedule" style="display:none"><div class="loading"><div class="spin"></div><br>Loading...</div></div> <div id="upcoming" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
   </div>
 </div>
 
@@ -381,7 +381,6 @@ function showStats(matchId, home, away) {
   return h;
 } 
 loadData();
-  checkLiveMatches(data.todayMatches);
 function checkLiveMatches(todayMatches) {
   if (!todayMatches) return;
   var existing = document.getElementById('live-banner');
