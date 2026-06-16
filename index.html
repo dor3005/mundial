@@ -299,6 +299,7 @@ function loadData(){
 
       document.getElementById("yesterday").innerHTML = renderYesterday(data.yesterdayMatches);
       document.getElementById("today").innerHTML = renderToday(data.todayMatches);
+      checkUpcomingMatch(data.todayMatches);
      document.getElementById("upcoming").innerHTML = renderUpcoming(allUpcoming, data.myTeam, data.yesterdayMatches, data.todayMatches, data.historicalPoints);
     })
     .catch(function(e){
@@ -311,6 +312,30 @@ function loadData(){
 }
 
 loadData();
+
+function checkUpcomingMatch(todayMatches) {
+  if (!todayMatches) return;
+  var now = new Date().getTime();
+  todayMatches.forEach(function(m) {
+    if (!m.hasMine) return;
+    var matchTime = new Date(m.utcDate).getTime();
+    var minutesUntil = (matchTime - now) / (1000 * 60);
+    if (minutesUntil > 0 && minutesUntil <= 60) {
+      showMatchAlert(m, Math.round(minutesUntil));
+    }
+  });
+}
+
+function showMatchAlert(m, minutesUntil) {
+  var existing = document.getElementById('match-alert');
+  if (existing) return;
+  var players = m.myPlayers.map(function(p) { return p.name; }).join(', ');
+  var alert = document.createElement('div');
+  alert.id = 'match-alert';
+  alert.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00c896;color:white;padding:12px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:999;max-width:340px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4)';
+  alert.innerHTML = '⚡ Match in ' + minutesUntil + ' min!<br><span style="font-weight:400;font-size:11px">' + players + ' — ' + m.home + ' vs ' + m.away + '</span><br><span onclick="document.getElementById(\'match-alert\').remove()" style="font-size:10px;opacity:0.7;cursor:pointer">✕ dismiss</span>';
+  document.body.appendChild(alert);
+}
 </script>
   <script>
 if ('serviceWorker' in navigator) {
