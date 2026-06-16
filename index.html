@@ -326,22 +326,22 @@ function showStats(matchId, home, away) {
     .then(function(data){
       var panel = modal.querySelector('.stats-panel');
       var stats = '';
-      if(data.boxscore && data.boxscore.teams) {
-        var teams = data.boxscore.teams;
-        var homeStats = teams[0] && teams[0].statistics ? teams[0].statistics : [];
-        var awayStats = teams[1] && teams[1].statistics ? teams[1].statistics : [];
-        var statNames = ['possessionPct','totalShots','shotsOnTarget','corners','fouls','yellowCards'];
-        var statLabels = {'possessionPct':'Possession %','totalShots':'Shots','shotsOnTarget':'On Target','corners':'Corners','fouls':'Fouls','yellowCards':'Yellow Cards'};
+      var teams = data.boxscore && data.boxscore.teams;
+      if(teams && teams.length >= 2) {
+        var homeStats = teams[0].statistics || [];
+        var awayStats = teams[1].statistics || [];
+        var show = ['possessionPct','totalShots','shotsOnTarget','wonCorners','foulsCommitted','yellowCards'];
+        var labels = {'possessionPct':'Possession %','totalShots':'Shots','shotsOnTarget':'On Target','wonCorners':'Corners','foulsCommitted':'Fouls','yellowCards':'Yellow Cards'};
         homeStats.forEach(function(s) {
-          if(statNames.indexOf(s.name) === -1) return;
-          var away = awayStats.find(function(a){ return a.name === s.name; });
+          if(show.indexOf(s.name) === -1) return;
+          var aw = awayStats.find(function(a){ return a.name === s.name; });
           var hv = parseFloat(s.displayValue) || 0;
-          var av = away ? parseFloat(away.displayValue) || 0 : 0;
+          var av = aw ? parseFloat(aw.displayValue) || 0 : 0;
           var total = hv + av || 1;
-          stats += '<div class="stats-row"><span style="font-size:12px;font-weight:700;min-width:30px;text-align:right">'+s.displayValue+'</span><div style="flex:1;margin:0 8px"><div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:3px">'+(statLabels[s.name]||s.name)+'</div><div class="stats-bar"><div class="stats-bar-fill" style="width:'+(hv/total*100)+'%"></div></div></div><span style="font-size:12px;font-weight:700;min-width:30px">'+(away?away.displayValue:'0')+'</span></div>';
+          stats += '<div style="margin-bottom:12px"><div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:4px">'+(labels[s.name]||s.name)+'</div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:700;min-width:30px;text-align:right">'+s.displayValue+'</span><div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--accent);border-radius:3px;width:'+(hv/total*100)+'%"></div></div><span style="font-size:13px;font-weight:700;min-width:30px">'+(aw?aw.displayValue:'0')+'</span></div></div>';
         });
       }
-      panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-size:14px;font-weight:700">'+home+' vs '+away+'</div><span onclick="this.closest(\'.stats-modal\').remove()" style="cursor:pointer;font-size:18px;color:var(--text2)">✕</span></div>'+(stats||'<div style="color:var(--text2);font-size:12px;text-align:center">No stats available yet</div>');
+      panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-size:14px;font-weight:700">'+home+' vs '+away+'</div><span onclick="this.closest(\'.stats-modal\').remove()" style="cursor:pointer;font-size:18px;color:var(--text2)">✕</span></div><div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-size:12px;font-weight:700;color:var(--text2)">'+home+'</span><span style="font-size:12px;font-weight:700;color:var(--text2)">'+away+'</span></div>'+(stats||'<div style="color:var(--text2);font-size:12px;text-align:center">No stats available</div>');
     });
 }
 loadData();
