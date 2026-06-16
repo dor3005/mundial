@@ -314,10 +314,10 @@ function loadData(){
     })
     .catch(function(e){
       var errMsg = '<div class="error-box"><strong>Could not load data</strong><br>Make sure the Google Drive file is shared as "Anyone with link can view"<br><br>Error: ' + e.message + '</div>';
-      document.getElementById("yesterday").innerHTML = errMsg;
-      document.getElementById("today").innerHTML = errMsg;
-      document.getElementById("upcoming").innerHTML = errMsg;
-      document.getElementById("updated-chip").textContent = "Error";
+document.getElementById("yesterday").innerHTML = errMsg;
+document.getElementById("today").innerHTML = errMsg;
+document.getElementById("upcoming").innerHTML = errMsg;
+document.getElementById("schedule").innerHTML = errMsg;
     });
 }
 function showStats(matchId, home, away) {
