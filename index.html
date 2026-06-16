@@ -93,7 +93,7 @@
     <div class="tabs">
       <button class="tab on" onclick="show('yesterday')">Yesterday</button>
       <button class="tab" onclick="show('today')">Tonight</button>
-      <button class="tab" onclick="show('upcoming')">My Players</button> <button class="tab" onclick="show('schedule')">Schedule</button>
+      <button class="tab" onclick="show('schedule')">Schedule</button> <button class="tab" onclick="show('upcoming')">My Players</button>
     </div>
   </div>
 
@@ -134,7 +134,7 @@ function formatTimeIL(utcDate){
 }
 
 function show(tab){
-  ["yesterday","today","upcoming","schedule"].forEach(function(id){
+  ["yesterday","today","schedule","upcoming"].forEach(function(id){
     document.getElementById(id).style.display = id===tab?"block":"none";
   });
   document.querySelectorAll(".tab").forEach(function(t,i){
@@ -350,7 +350,7 @@ function showStats(matchId, home, away) {
     });
 }
  function renderSchedule(yesterdayMatches, todayMatches, upcomingMatches) {
-  var all = (yesterdayMatches||[]).concat(todayMatches||[]).concat(upcomingMatches||[]);
+  var now = new Date().getTime(); var all = (todayMatches||[]).concat(upcomingMatches||[]).filter(function(m) {   return new Date(m.utcDate).getTime() >= now - 2*60*60*1000; });
   if(!all.length) return '<div style="color:var(--text2);padding:20px 0">No matches found</div>';
   var byDate = {};
   all.forEach(function(m) {
