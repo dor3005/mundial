@@ -93,14 +93,14 @@
     <div class="tabs">
       <button class="tab on" onclick="show('yesterday')">Yesterday</button>
       <button class="tab" onclick="show('today')">Tonight</button>
-      <button class="tab" onclick="show('upcoming')">My Players</button>
+      <button class="tab" onclick="show('upcoming')">My Players</button> <button class="tab" onclick="show('schedule')">Schedule</button>
     </div>
   </div>
 
   <div class="content">
     <div id="yesterday"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
     <div id="today" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
-    <div id="upcoming" style="display:none"><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
+    <div id="schedule" style="display:none"><div class="loading"><div class="spin"></div><br>Loading...</div></div><div class="loading"><div class="spin"></div><br>Loading data...</div></div>
   </div>
 </div>
 
@@ -134,11 +134,11 @@ function formatTimeIL(utcDate){
 }
 
 function show(tab){
-  ["yesterday","today","upcoming"].forEach(function(id){
+  ["yesterday","today","upcoming","schedule"].forEach(function(id){
     document.getElementById(id).style.display = id===tab?"block":"none";
   });
   document.querySelectorAll(".tab").forEach(function(t,i){
-    t.classList.toggle("on",["yesterday","today","upcoming"][i]===tab);
+    t.classList.toggle("on",["yesterday","today","upcoming","schedule"][i]===tab);
   });
 }
 
@@ -309,6 +309,7 @@ function loadData(){
       document.getElementById("today").innerHTML = renderToday(data.todayMatches);
       checkUpcomingMatch(data.todayMatches);
       checkLiveMatches(data.todayMatches);
+      document.getElementById("schedule").innerHTML = renderSchedule(data.yesterdayMatches, data.todayMatches, data.upcomingMatches);
      document.getElementById("upcoming").innerHTML = renderUpcoming(allUpcoming, data.myTeam, data.yesterdayMatches, data.todayMatches, data.historicalPoints);
     })
     .catch(function(e){
@@ -348,7 +349,39 @@ function showStats(matchId, home, away) {
       panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-size:14px;font-weight:700">'+home+' vs '+away+'</div><span onclick="this.closest(\'.stats-modal\').remove()" style="cursor:pointer;font-size:18px;color:var(--text2)">✕</span></div><div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-size:12px;font-weight:700;color:var(--text2)">'+home+'</span><span style="font-size:12px;font-weight:700;color:var(--text2)">'+away+'</span></div>'+(stats||'<div style="color:var(--text2);font-size:12px;text-align:center">No stats available</div>');
     });
 }
+ function renderSchedule(yesterdayMatches, todayMatches, upcomingMatches) {
+  var all = (yesterdayMatches||[]).concat(todayMatches||[]).concat(upcomingMatches||[]);
+  if(!all.length) return '<div style="color:var(--text2);padding:20px 0">No matches found</div>';
+  var byDate = {};
+  all.forEach(function(m) {
+    var date = new Date(m.utcDate).toLocaleDateString("en-IL",{timeZone:"Asia/Jerusalem",day:"2-digit",month:"2-digit",weekday:"short"});
+    if(!byDate[date]) byDate[date] = [];
+    byDate[date].push(m);
+  });
+  var h = '';
+  Object.keys(byDate).forEach(function(date) {
+    h += '<div class="sec">'+date+'</div>';
+    byDate[date].forEach(function(m) {
+      var isMine = m.hasMine;
+      var scoreOrTime = m.homeScore !== null ? m.homeScore+' - '+m.awayScore : formatTimeIL(m.utcDate);
+      var label = m.isLive ? '🔴 '+m.clock : m.homeScore !== null ? 'FT' : formatTimeIL(m.utcDate);
+      h += '<div class="mc'+(isMine?' mine':'')+'" onclick="showStats(\''+m.matchId+'\',\''+m.home+'\',\''+m.away+'\')" style="cursor:pointer;padding:8px 12px">';
+      h += '<div style="display:flex;align-items:center;justify-content:space-between">';
+      h += '<div style="flex:1;text-align:center"><div style="font-size:18px">'+flag(m.homeNat)+'</div><div style="font-size:11px;font-weight:700">'+m.home+'</div></div>';
+      h += '<div style="text-align:center;min-width:70px"><div style="font-size:15px;font-weight:800;color:'+(m.isLive?'var(--red)':'var(--text)')+'">'+scoreOrTime+'</div><div style="font-size:9px;color:var(--text2)">'+label+'</div></div>';
+      h += '<div style="flex:1;text-align:center"><div style="font-size:18px">'+flag(m.awayNat)+'</div><div style="font-size:11px;font-weight:700">'+m.away+'</div></div>';
+      h += '</div>';
+      if(isMine) {
+        var names = m.myPlayers.map(function(p){return p.name.split(' ').pop();}).join(', ');
+        h += '<div style="font-size:10px;color:var(--accent);text-align:center;margin-top:4px">⭐ '+names+'</div>';
+      }
+      h += '</div>';
+    });
+  });
+  return h;
+} 
 loadData();
+  checkLiveMatches(data.todayMatches);
 function checkLiveMatches(todayMatches) {
   if (!todayMatches) return;
   var existing = document.getElementById('live-banner');
