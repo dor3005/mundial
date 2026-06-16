@@ -1,0 +1,15 @@
+{
+  "name": "Fantasy World Cup 2026",
+  "short_name": "Fantasy WC",
+  "start_url": "/mundial/",
+  "display": "standalone",
+  "background_color": "#0f1923",
+  "theme_color": "#1e90ff",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/26bd.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}
