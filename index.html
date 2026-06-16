@@ -69,6 +69,11 @@
   .error-box{background:rgba(231,76,60,.1);border:1px solid var(--red);border-radius:12px;padding:14px;color:var(--red);font-size:12px;line-height:1.6}
   .setup-box{background:rgba(245,200,66,.08);border:1px solid var(--gold);border-radius:12px;padding:14px;font-size:12px;color:var(--text2);line-height:1.8}
   .setup-box strong{color:var(--gold)}
+  .stats-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:flex-end;justify-content:center}
+.stats-panel{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;max-height:70vh;overflow-y:auto}
+.stats-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stats-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;margin:0 8px;overflow:hidden}
+.stats-bar-fill{height:100%;background:var(--accent);border-radius:3px}
 </style>
 </head>
 <body>
@@ -139,7 +144,7 @@ function renderYesterday(matches){
   var h = '<div class="sec">Yesterday\'s Results</div>';
   matches.forEach(function(m){
     var mine = m.hasMine;
-    h += '<div class="mc'+(mine?" mine":"")+'">';
+    h += '<div class="mc'+(mine?" mine":"")+'" onclick="showStats(\''+m.matchId+'\',\''+m.home+'\',\''+m.away+'\')" style="cursor:pointer">';
     if(mine) h += '<div class="badge badge-blue">YOUR PLAYERS HERE</div>';
     h += '<div class="teams">';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
@@ -177,7 +182,7 @@ function renderToday(matches){
     var clockLabel = m.isLive ? '[LIVE] '+m.clock : m.homeScore !== null ? 'Full Time' : 'Israel Time';
     var isMine = m.hasMine;
     
-    h += '<div class="mc'+(isMine?' today-mine':'')+'">';
+    h += '<div class="mc'+(isMine?' today-mine':'')+'" onclick="showStats(\''+m.matchId+'\',\''+m.home+'\',\''+m.away+'\')" style="cursor:pointer">';
     if(isMine) h += '<div class="badge badge-green">YOUR PLAYER IS PLAYING</div>';
     h += '<div class="teams">';
     h += '<div class="tm"><div style="font-size:22px">'+flag(m.homeNat)+'</div><div class="tm-nat">'+m.homeNat+'</div><div class="tm-name">'+m.home+'</div></div>';
@@ -310,7 +315,35 @@ function loadData(){
       document.getElementById("updated-chip").textContent = "Error";
     });
 }
+function showStats(matchId, home, away) {
+  var modal = document.createElement('div');
+  modal.className = 'stats-modal';
+  modal.innerHTML = '<div class="stats-panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-size:14px;font-weight:700">'+home+' vs '+away+'</div><span onclick="this.closest(\'.stats-modal\').remove()" style="cursor:pointer;font-size:18px;color:var(--text2)">✕</span></div><div style="text-align:center;color:var(--text2);font-size:12px">Loading stats...</div></div>';
+  document.body.appendChild(modal);
 
+  fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event='+matchId)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var panel = modal.querySelector('.stats-panel');
+      var stats = '';
+      if(data.boxscore && data.boxscore.teams) {
+        var teams = data.boxscore.teams;
+        var homeStats = teams[0] && teams[0].statistics ? teams[0].statistics : [];
+        var awayStats = teams[1] && teams[1].statistics ? teams[1].statistics : [];
+        var statNames = ['possessionPct','totalShots','shotsOnTarget','corners','fouls','yellowCards'];
+        var statLabels = {'possessionPct':'Possession %','totalShots':'Shots','shotsOnTarget':'On Target','corners':'Corners','fouls':'Fouls','yellowCards':'Yellow Cards'};
+        homeStats.forEach(function(s) {
+          if(statNames.indexOf(s.name) === -1) return;
+          var away = awayStats.find(function(a){ return a.name === s.name; });
+          var hv = parseFloat(s.displayValue) || 0;
+          var av = away ? parseFloat(away.displayValue) || 0 : 0;
+          var total = hv + av || 1;
+          stats += '<div class="stats-row"><span style="font-size:12px;font-weight:700;min-width:30px;text-align:right">'+s.displayValue+'</span><div style="flex:1;margin:0 8px"><div style="font-size:10px;color:var(--text2);text-align:center;margin-bottom:3px">'+(statLabels[s.name]||s.name)+'</div><div class="stats-bar"><div class="stats-bar-fill" style="width:'+(hv/total*100)+'%"></div></div></div><span style="font-size:12px;font-weight:700;min-width:30px">'+(away?away.displayValue:'0')+'</span></div>';
+        });
+      }
+      panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-size:14px;font-weight:700">'+home+' vs '+away+'</div><span onclick="this.closest(\'.stats-modal\').remove()" style="cursor:pointer;font-size:18px;color:var(--text2)">✕</span></div>'+(stats||'<div style="color:var(--text2);font-size:12px;text-align:center">No stats available yet</div>');
+    });
+}
 loadData();
 
 function checkUpcomingMatch(todayMatches) {
