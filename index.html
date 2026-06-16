@@ -137,8 +137,9 @@ function show(tab){
   ["yesterday","today","schedule","upcoming"].forEach(function(id){
     document.getElementById(id).style.display = id===tab?"block":"none";
   });
-  document.querySelectorAll(".tab").forEach(function(t,i){
-["yesterday","today","schedule","upcoming"][i]===tab
+  document.querySelectorAll(".tab").forEach(function(t){
+    var tabName = t.getAttribute("onclick").match(/'([^']+)'/)[1];
+    t.classList.toggle("on", tabName===tab);
   });
 }
 
