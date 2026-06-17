@@ -381,6 +381,13 @@ function showStats(matchId, home, away) {
   });
   return h;
 } 
+// Auto-refresh every 5 minutes during live matches
+setInterval(function() {
+  var hasLive = document.getElementById('live-banner');
+  if (hasLive) {
+    loadData();
+  }
+}, 5 * 60 * 1000);
 loadData();
 function checkLiveMatches(todayMatches) {
   if (!todayMatches) return;
